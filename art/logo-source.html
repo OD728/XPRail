@@ -1,79 +1,104 @@
 <!doctype html>
-<html><head><meta charset="utf-8">
-<style>html,body{margin:0;padding:0;background:#000;overflow:hidden}canvas{display:block}</style>
-</head><body>
-<canvas id="c" width="512" height="512"></canvas>
+<html><head><meta charset="utf-8"><title>XP Rail logo (Paint style)</title>
+<style>html,body{margin:0;background:#16162a}canvas{display:block}</style></head>
+<body><canvas id="c" width="512" height="512"></canvas>
 <script>
-// XP Rail logo: stacked progress bars in its color sets, like the other logos.
+// XP Rail logo, drawn like a kid did it in MS Paint.
+// Seeded random so every render gives the same picture.
+
+let seed = 41;
+function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+function jit(n) { return (rnd() - 0.5) * 2 * n; }
+
 const c = document.getElementById('c');
 const g = c.getContext('2d');
-const W = 512;
+const BG = '#16162a', INK = '#fff';
+const used = new Set([BG, INK, '#000']);
+g.fillStyle = BG; g.fillRect(0, 0, 512, 512);
+g.lineCap = 'round'; g.lineJoin = 'round';
 
-let bg = g.createRadialGradient(256, 236, 20, 256, 256, 380);
-bg.addColorStop(0, '#16302a');
-bg.addColorStop(0.55, '#0b1513');
-bg.addColorStop(1, '#050807');
-g.fillStyle = bg;
-g.fillRect(0, 0, W, W);
-
-function rr(x, y, w, h, r) {
+// A shaky line through points: each segment is cut into little steps that wander.
+function shakyPath(pts, wob, closed) {
+  const p = closed ? pts.concat([pts[0]]) : pts;
   g.beginPath();
-  g.moveTo(x + r, y);
-  g.arcTo(x + w, y, x + w, y + h, r);
-  g.arcTo(x + w, y + h, x, y + h, r);
-  g.arcTo(x, y + h, x, y, r);
-  g.arcTo(x, y, x + w, y, r);
-  g.closePath();
-}
-
-// A bar: rim, dark track, rested + quest overlays, gradient fill, ticks, spark.
-function bar(x, y, w, h, frac, a, b, opt) {
-  opt = opt || {};
-  g.save();
-  if (opt.gold) {
-    g.fillStyle = '#000';
-    rr(x - 9, y - 9, w + 18, h + 18, 4); g.fill();
-    let gl = g.createLinearGradient(0, y - 7, 0, y + h + 7);
-    gl.addColorStop(0, '#f2cc66'); gl.addColorStop(1, '#8c661f');
-    g.fillStyle = gl;
-    rr(x - 7, y - 7, w + 14, h + 14, 3); g.fill();
-  } else {
-    g.fillStyle = '#000';
-    rr(x - 5, y - 5, w + 10, h + 10, 3); g.fill();
+  g.moveTo(p[0][0] + jit(wob), p[0][1] + jit(wob));
+  for (let i = 1; i < p.length; i++) {
+    const [ax, ay] = p[i - 1], [bx, by] = p[i];
+    const steps = Math.max(2, Math.round(Math.hypot(bx - ax, by - ay) / 18));
+    for (let s = 1; s <= steps; s++) {
+      const t = s / steps;
+      g.lineTo(ax + (bx - ax) * t + jit(wob), ay + (by - ay) * t + jit(wob));
+    }
   }
-  g.fillStyle = '#0f1011';
-  g.fillRect(x, y, w, h);
-  const fw = w * frac;
-  if (opt.quest) { g.fillStyle = 'rgba(255,150,0,0.55)'; g.fillRect(x + fw, y, w * opt.quest, h); }
-  if (opt.rested) { g.fillStyle = 'rgba(0,100,225,0.55)'; g.fillRect(x + fw, y, w * opt.rested, h); }
-  let lg = g.createLinearGradient(x, 0, x + fw, 0);
-  lg.addColorStop(0, a); lg.addColorStop(1, b);
-  g.shadowColor = b; g.shadowBlur = 16;
-  g.fillStyle = lg;
-  g.fillRect(x, y, fw, h);
-  g.shadowBlur = 0;
-  let sh = g.createLinearGradient(0, y, 0, y + h);
-  sh.addColorStop(0, 'rgba(255,255,255,0.25)');
-  sh.addColorStop(0.5, 'rgba(255,255,255,0)');
-  g.fillStyle = sh;
-  g.fillRect(x, y, fw, h);
-  g.fillStyle = 'rgba(0,0,0,0.35)';
-  for (let i = 1; i < 10; i++) g.fillRect(Math.round(x + w * i / 10), y, 2, h);
-  const sx = x + fw, sy = y + h / 2;
-  let sp = g.createRadialGradient(sx, sy, 0, sx, sy, h * 1.4);
-  sp.addColorStop(0, 'rgba(255,255,255,0.95)');
-  sp.addColorStop(0.35, b.replace('rgb', 'rgba').replace(')', ',0.6)'));
-  sp.addColorStop(1, 'rgba(0,0,0,0)');
-  g.globalCompositeOperation = 'lighter';
-  g.fillStyle = sp;
-  g.beginPath(); g.ellipse(sx, sy, h * 0.35, h * 1.3, 0, 0, Math.PI * 2); g.fill();
-  g.globalCompositeOperation = 'source-over';
-  g.restore();
+}
+function stroke(pts, color, width, wob, closed) {
+  used.add(color); g.strokeStyle = color; g.lineWidth = width;
+  shakyPath(pts, wob, closed); g.stroke();
+}
+// "Paint bucket": fill slightly off from the outline, so it leaks and misses.
+function sloppyFill(pts, color, dx, dy) {
+  used.add(color); g.fillStyle = color;
+  shakyPath(pts.map(([x, y]) => [x + dx, y + dy]), 5, true); g.fill();
+}
+// Fill + white outline in one go.
+function shape(pts, fill, off, width) {
+  sloppyFill(pts, fill, off[0], off[1]);
+  stroke(pts, INK, width || 7, 4, true);
+}
+function circle(cx, cy, r, n) {
+  const pts = []; n = n || 14;
+  for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2; pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); }
+  return pts;
+}
+function poly(cx, cy, r, n, rot) {
+  const pts = [];
+  for (let i = 0; i < n; i++) { const a = rot + i / n * Math.PI * 2; pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); }
+  return pts;
+}
+function rect(x, y, w, h) { return [[x, y], [x + w, y], [x + w, y + h], [x, y + h]]; }
+function star(cx, cy, r1, r2) {
+  const pts = [];
+  for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? r2 : r1; pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); }
+  return pts;
+}
+// Big wobbly "handwriting".
+function scrawl(text, x, y, size, color) {
+  used.add(color); g.fillStyle = color;
+  g.font = 'bold ' + size + 'px "Comic Sans MS", cursive';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  let cx = x - g.measureText(text).width / 2;
+  for (const ch of text) {
+    const w = g.measureText(ch).width;
+    g.save(); g.translate(cx + w / 2, y + jit(4)); g.rotate(jit(0.12)); g.fillText(ch, 0, 0); g.restore();
+    cx += w;
+  }
 }
 
-const X = 76, BW = 360;
-bar(X, 118, BW, 46, 0.72, 'rgb(0,255,255)', 'rgb(255,0,255)', { rested: 0.12, quest: 0.2 });   // Neon
-bar(X, 226, BW, 46, 0.52, 'rgb(203,166,247)', 'rgb(245,194,231)', { quest: 0.14 });          // Catppuccin
-bar(X, 334, BW, 46, 0.86, 'rgb(148,0,140)', 'rgb(200,60,200)', { gold: true, rested: 0.1 }); // Game XP, gold rim
-</script>
-</body></html>
+
+// Three XP bars, filled in crayon colors, with little segment ticks and sparkles.
+const rails = [[110, '#22ddee', '#ff44cc', 0.78], [234, '#d8b8ff', '#ffffff', 0.55], [358, '#dd22aa', '#ff99ee', 0.9]];
+for (const [y, a, b, f] of rails) {
+  const w = 400 * f * 0.88;
+  sloppyFill(rect(56, y, w / 2, 64), a, 4, 3);
+  sloppyFill(rect(56 + w / 2, y, w / 2, 64), b, 4, 3);
+  sloppyFill(rect(56 + w, y, 400 * 0.1, 64), '#cc8822', 3, -3);
+  for (let x = 56 + 40; x < 456; x += 40) stroke([[x, y + 6], [x, y + 58]], BG, 3, 2);
+  stroke(rect(56, y, 400, 64), y === 358 ? '#ffcc33' : INK, 8, 3, true);
+  stroke(star(56 + w, y + 32, 30, 12), INK, 4, 2, true);
+}
+
+
+// MS Paint has no smoothing: snap every pixel to the nearest color this page used.
+const palette = [...used].map(h => [1, 3, 5].map(i => parseInt(h.length === 4 ? h[(i + 1) / 2].repeat(2) : h.substr(i, 2), 16)));
+const img = g.getImageData(0, 0, 512, 512), d = img.data;
+for (let i = 0; i < d.length; i += 4) {
+  let best = palette[0], bd = 1e9;
+  for (const p of palette) {
+    const dd = (d[i]-p[0])**2 + (d[i+1]-p[1])**2 + (d[i+2]-p[2])**2;
+    if (dd < bd) { bd = dd; best = p; }
+  }
+  d[i] = best[0]; d[i+1] = best[1]; d[i+2] = best[2]; d[i+3] = 255;
+}
+g.putImageData(img, 0, 0);
+
+</script></body></html>
