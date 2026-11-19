@@ -1,0 +1,6 @@
+package-as: XPRail
+
+ignore:
+  - README.md
+  - art
+  - CHANGELOG.md
