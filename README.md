@@ -3,7 +3,7 @@
 <img src="art/curseforge-logo.png" alt="XP Rail" width="160">
 
 **A clean experience and reputation bar in place of the game's own**, made for WoW: Forever.
-It fits the default UI and mUI alike.
+It fits right in with the default UI.
 
 ![XP Rail in game: the bar at level 46 with rested and completed-quest XP, and its tooltip](art/screenshot.png)
 
@@ -19,7 +19,7 @@ It fits the default UI and mUI alike.
   Mana, Rage, Energy, Cast bar, Rested), item quality colors, and the Neon,
   Catppuccin, Cyberpunk and Dracula sets from Cooldown Skin. Reputation can keep
   its standing color (red for Hostile, green for Friendly and so on).
-- **Border:** black like mUI, or gold like the default unit frames.
+- **Border:** thin black, or gold like the default unit frames.
 - **Tooltip** with the exact numbers, XP to the next level, rested and quest XP,
   this session's XP per hour and the time to level up.
 - English and German.

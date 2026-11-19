@@ -8,7 +8,7 @@ First release.
 - Rested XP and XP from completed quests shown as overlays ahead of your XP.
 - Any length and thickness, horizontal or vertical, movable anywhere.
 - Colors: the game's XP purple, class color, Classic bar colors, item quality colors, and the Neon, Catppuccin, Cyberpunk and Dracula sets. Reputation can keep its standing color.
-- Black (mUI) or gold (default UI) border.
+- Thin black or gold border (gold like the default unit frames).
 - Tooltip with the numbers, rested and quest XP, XP per hour this session and time to level.
 - Options window: `/xprail`, right-click the bar, the minimap addon menu, or Options > AddOns > XP Rail.
 - English and German.
