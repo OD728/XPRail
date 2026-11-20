@@ -1,10 +1,11 @@
 ## Interface: 16001
-## Title: |cff8ce6c0XP Rail|r
+## Title: |cffcca3ffXP Rail|r
 ## Notes: A clean experience / reputation bar that replaces the default one. Movable, any size, horizontal or vertical, with color sets. /xprail for options.
 ## Notes-deDE: Eine schlichte Erfahrungs-/Rufleiste anstelle der Standardleiste. Verschiebbar, beliebige Größe, waagerecht oder senkrecht, mit Farbsets. /xprail für Optionen.
-## Version: 1.0
+## Version: 1.0.1
 ## Author: Ron
 ## X-License: MIT
+## X-Curse-Project-ID: 1816172
 ## SavedVariables: XPRailDB
 ## X-Category: Interface Enhancements
 ## IconTexture: Interface\Icons\INV_Misc_Book_11
