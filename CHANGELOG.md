@@ -1,5 +1,12 @@
 # XP Rail changelog
 
+## 1.1
+
+- New color schemes: **Gruvbox, Rosé Pine, Kanagawa, OneDark and Tokyo Night**.
+- The Quality row now also has **Artifact** and **Heirloom**.
+- The color rows are in the same order as in the author's other addons.
+- The settings window is lavender instead of mint, the same look as the author's other addons.
+
 ## 1.0.1
 
 - Minor fixes.

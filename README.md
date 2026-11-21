@@ -16,9 +16,10 @@ It fits right in with the default UI.
   vertical.
 - **Movable:** uncheck "Locked" (or `/xprail unlock`) and drag it anywhere.
 - **Colors:** the game's own XP purple, your class color, Classic bar colors (Health,
-  Mana, Rage, Energy, Cast bar, Rested), item quality colors, and the Neon,
-  Catppuccin, Cyberpunk and Dracula sets from Cooldown Skin. Reputation can keep
-  its standing color (red for Hostile, green for Friendly and so on).
+  Mana, Rage, Energy, Cast bar, Rested), item quality colors (Uncommon to
+  Heirloom), and the Neon, Cyberpunk, Dracula, Gruvbox, Catppuccin, Rosé Pine,
+  Kanagawa, OneDark and Tokyo Night sets, the same as in Cooldown Skin. Reputation
+  can keep its standing color (red for Hostile, green for Friendly and so on).
 - **Border:** thin black, or gold like the default unit frames.
 - **Tooltip** with the exact numbers, XP to the next level, rested and quest XP,
   this session's XP per hour and the time to level up.

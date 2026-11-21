@@ -2,7 +2,7 @@
 ## Title: |cffcca3ffXP Rail|r
 ## Notes: A clean experience / reputation bar that replaces the default one. Movable, any size, horizontal or vertical, with color sets. /xprail for options.
 ## Notes-deDE: Eine schlichte Erfahrungs-/Rufleiste anstelle der Standardleiste. Verschiebbar, beliebige Größe, waagerecht oder senkrecht, mit Farbsets. /xprail für Optionen.
-## Version: 1.0.1
+## Version: 1.1
 ## Author: Ron
 ## X-License: MIT
 ## X-Curse-Project-ID: 1816172
