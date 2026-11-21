@@ -2,7 +2,7 @@
 
 <img src="art/curseforge-logo.png" alt="XP Rail" width="160">
 
-**A clean experience and reputation bar in place of the game's own**, made for WoW: Forever.
+**WoW: Forever addon:** a clean experience and reputation bar in place of the game's own.
 It fits right in with the default UI.
 
 ![XP Rail in game: the bar at level 46 with rested and completed-quest XP, and its tooltip](art/screenshot.png)
